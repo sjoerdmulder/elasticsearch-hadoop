@@ -292,7 +292,7 @@ public class RestRepository implements Closeable, StatsAware {
             if (!settings.getNodesClientOnly()) {
                 msg += String.format("; if you are using client-only nodes make sure to configure es-hadoop as such through [%s] property", ConfigurationOptions.ES_NODES_CLIENT_ONLY);
             }
-            new EsHadoopIllegalStateException(msg);
+            throw new EsHadoopIllegalStateException(msg);
         }
 
         Map<Shard, Node> shards = new LinkedHashMap<Shard, Node>();
@@ -436,6 +436,21 @@ public class RestRepository implements Closeable, StatsAware {
 
     public boolean touch() {
         return client.touch(resourceW.index());
+    }
+
+    public void delete() {
+        client.delete(resourceW.indexAndType());
+    }
+
+    public boolean isEmpty(boolean read) {
+        Resource res = (read ? resourceR : resourceW);
+        boolean exists = client.exists(res.indexAndType());
+        return (exists ? count(read) <= 0 : true);
+    }
+
+    public long count(boolean read) {
+        Resource res = (read ? resourceR : resourceW);
+        return client.count(res.indexAndType());
     }
 
     public boolean waitForYellow() {
