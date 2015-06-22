@@ -59,7 +59,7 @@ public class DateIndexFormatter implements IndexFormatter {
 
         // gotta love regex
         // use lookahead to match isolated y/yyy with yyyy
-        format.replaceAll("((?<!y)(?:y|yyy)(?!y))", "yyyy");
+        format = format.replaceAll("((?<!y)(?:y|yyy)(?!y))", "yyyy");
 
         return format;
     }
@@ -71,6 +71,7 @@ public class DateIndexFormatter implements IndexFormatter {
         }
 
         Calendar calendar = DatatypeConverter.parseDateTime(value);
+        dateFormat.setCalendar(calendar);
         return dateFormat.format(calendar.getTime());
     }
 }

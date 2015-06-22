@@ -184,8 +184,11 @@ public class EsOutputFormat extends OutputFormat implements org.apache.hadoop.ma
             // select the appropriate nodes first, to spread the load before-hand
             SettingsUtils.pinNode(settings, nodes.get(currentInstance % nodes.size()));
 
-            beat = new HeartBeat(progressable, cfg, settings.getHeartBeatLead(), log);
-            beat.start();
+			// in Hadoop-like envs (Spark) the progressable might be null and thus the heart-beat is not needed
+			if (progressable != null) {
+				beat = new HeartBeat(progressable, cfg, settings.getHeartBeatLead(), log);
+				beat.start();
+			}
 
             resource = new Resource(settings, false);
 
@@ -215,6 +218,9 @@ public class EsOutputFormat extends OutputFormat implements org.apache.hadoop.ma
 
             Map<Shard, Node> targetShards = repository.getWriteTargetPrimaryShards();
             repository.close();
+
+            Assert.isTrue(!targetShards.isEmpty(),
+                    String.format("Cannot determine write shards for [%s]; likely its format is incorrect (maybe it contains illegal characters?)", resource));
 
             List<Shard> orderedShards = new ArrayList<Shard>(targetShards.keySet());
             // make sure the order is strict

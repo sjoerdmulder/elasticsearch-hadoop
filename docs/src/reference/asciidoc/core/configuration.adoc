@@ -70,7 +70,7 @@ IMPORTANT: Dynamic resources are supported _only_ for writing, for doing multi-i
 [float]
 ===== Formatting dynamic/multi resource writes
 
-When using dynamic/multi writes, one can also specify a formatting of the value returned by the field. Out of the box, {esh} provides formatting for date/timestamp fields which is useful for automatically grouping time-based data (such as logs)
+When using dynamic/multi writes, one can also specify a formatting of the value returned by the field. Out of the box, {eh} provides formatting for date/timestamp fields which is useful for automatically grouping time-based data (such as logs)
  within a certain time range under the same index. By using the Java http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html[SimpleDataFormat] syntax, one can format and parse the date in a locale-sensitive manager.
 
 For example assuming the data contains a +@timestamp+ field, one can group the documents in _daily_ indices using the following configuration:
@@ -161,6 +161,10 @@ The document field/property name containing the document parent. To specify a co
 `es.mapping.version` (default none)::
 The document field/property name containing the document version. To specify a constant, use the `<CONSTANT>` format.
 
+`es.mapping.version.type` (default depends on +es.mapping.version+)::
+Indicates the http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-index_.html#_version_types[type of versioning] used. 
+If +es.mapping.version+ is undefined (default), its value is unspecified. If +es.mapping.version+ is specified, its value becomes +external+.
+
 `es.mapping.routing` (default none)::
 The document field/property name containing the document routing. To specify a constant, use the `<CONSTANT>` format.
 
@@ -197,7 +201,7 @@ For example:
 [source,ini]
 ----
 # specifying 2 parameters, one extracting the value from field 'number', the other containing the value '123':
-es.update.params = param1:number,param2:\<123>
+es.update.script.params = param1:number,param2:\<123>
 ----
 
 `es.update.script.params.json`::
@@ -206,7 +210,7 @@ Script parameters specified in `raw`, JSON format. The specified value is passed
 For example:
 [source,ini]
 ----
-es.update.params.json = {"param1":1, "param2":2}
+es.update.script.params.json = {"param1":1, "param2":2}
 ----
 
 `es.update.retry.on.conflict` (default 0)::
@@ -253,7 +257,7 @@ Whether to discovery the nodes within the {es} cluster or only to use the ones g
 Timeout for HTTP/REST connections to {es}.
 
 `es.http.retries` (default 3)::
-Number of retries for estabilishing a (broken) http connection. The retries are applied for each _conversation_ with an {es} node. Once the retries are depleted, the connection will automatically be re-reouted to the next
+Number of retries for establishing a (broken) http connection. The retries are applied for each _conversation_ with an {es} node. Once the retries are depleted, the connection will automatically be re-reouted to the next
 available {es} node (based on the declaration of `es.nodes`, followed by the discovered nodes - if enabled).
 
 `es.scroll.keepalive` (default 10m)::
@@ -278,7 +282,7 @@ The lead to task timeout before {eh} informs Hadoop the task is still running to
 `es.net.proxy.socks.port`:: Http proxy port
 `es.net.proxy.socks.user`:: Http proxy user name
 `es.net.proxy.socks.pass`:: Http proxy password
-`es.net.proxy.http.use.system.props`(default yes):: Whether the use the system Socks proxy properties (namely `socksProxyHost` and `socksProxyHost`) or not
+`es.net.proxy.socks.use.system.props`(default yes):: Whether the use the system Socks proxy properties (namely `socksProxyHost` and `socksProxyHost`) or not
 
 NOTE: {eh} allows proxy settings to be applied only to its connection using the setting above. Take extra care when there is already a JVM-wide proxy setting (typically through system properties) to avoid unexpected behavior.
 

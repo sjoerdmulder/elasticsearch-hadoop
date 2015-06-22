@@ -22,8 +22,10 @@ If you do not have Hadoop installed, then select either the default version (for
 
 ## Installation
 
+The HDFS Snapshot/Restore is an Elasticsearch plugin - be sure to familiarize with what these are and how they work by reading the [plugins chapter](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-plugins.html) in the Elasticsearch documentation.
+
 ### Node restart
-_After_ installing the plugin, be sure to restart the node. This applies to _all_ nodes on which the plugins have been installed.
+_After_ installing the plugin on _every_ Elasticsearch node, be sure to _restart_ it. This applies to _all_ nodes on which the plugins have been installed - without restarting the nodes, the plugin will not function properly.
 
 As with any other plugin, simply run:
 `bin/plugin -i elasticsearch/elasticsearch-repository-hdfs/2.0.2`
@@ -41,7 +43,7 @@ Grab the latest nightly build from the [repository](http://oss.sonatype.org/cont
 <dependency>
   <groupId>org.elasticsearch</groupId>
   <artifactId>elasticsearch-repository-hdfs</artifactId>
-  <version>2.0.2.BUILD-SNAPSHOT</version>
+  <version>2.0.3.BUILD-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -57,7 +59,7 @@ Grab the latest nightly build from the [repository](http://oss.sonatype.org/cont
 
 ## Configuration Properties
 
-Once installed, define the configuration for the +hdfs+ repository through +elasticsearch.yml+ or the REST API:
+Once installed, define the configuration for the `hdfs` repository through `elasticsearch.yml` or the [REST API](http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshots.html):
 
 ```
 repositories
